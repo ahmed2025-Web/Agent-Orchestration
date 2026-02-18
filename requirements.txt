@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 aiohappyeyeballs==2.6.1
 aiohttp==3.13.3
 aiosignal==1.4.0
@@ -61,6 +62,7 @@ langchain-classic==1.0.1
 langchain-community==0.4.1
 langchain-core==1.2.11
 langchain-groq==1.1.2
+langchain-mistralai==1.0.18
 langchain-text-splitters==1.1.0
 langgraph==1.0.8
 langgraph-checkpoint==4.0.0
@@ -152,3 +154,5 @@ xxhash==3.6.0
 yarl==1.22.0
 zipp==3.23.0
 zstandard==0.25.0
+crewai
+crewai-tools
