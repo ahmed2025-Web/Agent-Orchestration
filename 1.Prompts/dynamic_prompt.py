@@ -10,10 +10,10 @@ import os
 
 load_dotenv()
 
-# Créer le LLM Mistral
+# Créer le LLM Groq
 llm = LLM(
-    model="mistral/mistral-small-latest",
-    api_key=os.getenv("MISTRAL_API_KEY")
+    model="groq/llama-3.1-8b-instant",
+    api_key=os.getenv("GROQ_API_KEY")
 )
 
 # Agent

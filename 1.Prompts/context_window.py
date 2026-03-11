@@ -10,10 +10,10 @@ import os
 
 load_dotenv()
 
-# Créer le LLM Mistral
+# Créer le LLM Groq
 llm = LLM(
-    model="mistral/mistral-small-latest",
-    api_key=os.getenv("MISTRAL_API_KEY")
+    model="groq/llama-3.1-8b-instant",
+    api_key=os.getenv("GROQ_API_KEY")
 )
 
 # Agent
@@ -29,8 +29,8 @@ print("CONTEXT WINDOW - Limite de tokens")
 print("=" * 70)
 
 models = [
-    ("Mistral Small", 32768, 24576),
-    ("Mistral Medium", 131072, 98304),
+    ("Groq Llama 3.1 8B", 8000, 6000),
+    ("Groq Mixtral 8x7B", 32000, 24000),
     ("Claude Opus", 200000, 150000),
     ("Gemini 2.5 Pro", 1000000, 750000),
 ]

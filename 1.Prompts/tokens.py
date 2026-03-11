@@ -10,10 +10,10 @@ import os
 
 load_dotenv()
 
-# Créer le LLM Mistral
+# Créer le LLM Groq
 llm = LLM(
-    model="mistral/mistral-small-latest",
-    api_key=os.getenv("MISTRAL_API_KEY")
+    model="groq/llama-3.1-8b-instant",
+    api_key=os.getenv("GROQ_API_KEY")
 )
 
 # Agent
@@ -50,9 +50,9 @@ for name, prompt in prompts:
     print(f"   Texte: {prompt[:60]}...")
     print(f"   Mots: ~{words}")
     print(f"   Tokens estimés: ~{estimated_tokens}")
-    print(f"   Coût (Mistral): ~${estimated_tokens * 0.00001:.4f}")
+    print(f"   Coût (Groq): ~${estimated_tokens * 0.0001:.4f}")
 
 print("\n" + "=" * 70)
 print("Note: 1 token ≈ 4 caractères ou 0.75 mots")
-print("Mistral Small: $0.14 per 1M input tokens")
+print("Groq (Llama 3.1 8B): FREE tier available or $0.045 per 1M input tokens")
 print("=" * 70)

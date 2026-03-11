@@ -1,5 +1,5 @@
 """
-Phase 1: Simple CrewAI avec Mistral
+Phase 1: Simple CrewAI avec Groq
 """
 
 from crewai import Agent, Task, Crew
@@ -11,8 +11,8 @@ load_dotenv()
 
 
 llm = LLM(
-    model="mistral/mistral-small-latest",
-    api_key=os.getenv("MISTRAL_API_KEY")
+    model="groq/llama-3.1-8b-instant",
+    api_key=os.getenv("GROQ_API_KEY")
 )
 
 # Créer un agent simple
