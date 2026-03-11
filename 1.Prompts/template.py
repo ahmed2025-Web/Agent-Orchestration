@@ -5,9 +5,11 @@ import os
 
 load_dotenv()
 
+
 llm = LLM(
-    model="mistral/mistral-small-latest",
-    api_key=os.getenv("MISTRAL_API_KEY")
+    model="groq/llama-3.1-8b-instant",
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1"
 )
 
 agent = Agent(
