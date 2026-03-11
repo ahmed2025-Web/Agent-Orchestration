@@ -35,7 +35,7 @@ models = [
     ("Gemini 2.5 Pro", 1000000, 750000),
 ]
 
-print("\n📊 Comparaison des modèles:\n")
+print("\n Comparaison des modèles:\n")
 print(f"{'Modèle':<20} {'Tokens Max':<15} {'Mots Approx':<15} {'Pages (±)':<10}")
 print("-" * 60)
 
@@ -44,7 +44,7 @@ for model, tokens, words in models:
     print(f"{model:<20} {tokens:<15,} {words:<15,} {pages:<10}")
 
 print("\n" + "=" * 70)
-print("⚠️  IMPLICATIONS PRATIQUES:")
+print(" IMPLICATIONS PRATIQUES:")
 print("=" * 70)
 
 task = Task(

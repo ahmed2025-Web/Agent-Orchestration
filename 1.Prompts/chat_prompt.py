@@ -1,6 +1,6 @@
 """
 Phase 1: Chat Prompt
-Goal: Conversation avec rôles (système + utilisateur)
+Goal: Conversation avec rôles 
 """
 
 from crewai import Agent, Task, Crew

@@ -1,8 +1,3 @@
-"""
-Templates de Prompts
-Goal: Créer des templates réutilisables
-"""
-
 from crewai import Agent, Task, Crew
 from crewai.llm import LLM
 from dotenv import load_dotenv
@@ -13,28 +8,34 @@ load_dotenv()
 
 llm = LLM(
     model="groq/llama-3.1-8b-instant",
-    api_key=os.getenv("GROQ_API_KEY")
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1"
 )
-# Utilisation des templates
 
 agent = Agent(
-    role="Expert",
-    goal="Répondre avec expertise",
-    backstory="Tu es un expert technique",
+    role="Expliqueur",
+    goal="Expliquer",
+    backstory="Tu expliques bien",
     llm=llm
 )
 
+# TEMPLATE
 template = "Explique {topic} en une phrase"
 
-
-topics = ["LLM", "RAG", "Agents"]
-
 print("=" * 60)
-print("SIMPLE TEMPLATE")
+print("TEMPLATE INTERACTIF")
 print("=" * 60)
 print(f"\nTemplate: {template}")
-print(f"Topics: {topics}")
+print("Entrez les topics à expliquer (séparés par des virgules)")
+print("Exemple: LLM, RAG, Agents\n")
+
+# input utilisateur
+user_input = input("Topics: ")
+topics = [t.strip() for t in user_input.split(",")]
+
 print("\n" + "=" * 60)
+print(f"Explication de: {topics}")
+print("=" * 60)
 
 
 for topic in topics:
