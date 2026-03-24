@@ -10,10 +10,10 @@ import os
 
 load_dotenv()
 
-# Créer le LLM Mistral
+# Créer le LLM Gemini
 llm = LLM(
-    model="mistral/mistral-small-latest",
-    api_key=os.getenv("MISTRAL_API_KEY")
+    model="gemini-2.5-flash",
+    api_key=os.getenv("GOOGLE_API_KEY")
 )
 
 # Agent expert

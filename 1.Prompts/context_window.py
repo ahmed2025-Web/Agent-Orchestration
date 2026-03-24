@@ -10,10 +10,10 @@ import os
 
 load_dotenv()
 
-# Créer le LLM Mistral
+# Créer le LLM Gemini
 llm = LLM(
-    model="mistral/mistral-small-latest",
-    api_key=os.getenv("MISTRAL_API_KEY")
+    model="gemini-2.5-flash",
+    api_key=os.getenv("GOOGLE_API_KEY")
 )
 
 # Agent
@@ -29,10 +29,10 @@ print("CONTEXT WINDOW - Limite de tokens")
 print("=" * 70)
 
 models = [
-    ("Mistral Small", 32768, 24576),
-    ("Mistral Medium", 131072, 98304),
-    ("Claude Opus", 200000, 150000),
+    ("Gemini 2.5 Flash", 1000000, 750000),
     ("Gemini 2.5 Pro", 1000000, 750000),
+    ("Claude Opus", 200000, 150000),
+    ("GPT-4.1", 128000, 96000),
 ]
 
 print("\n Comparaison des modèles:\n")

@@ -12,8 +12,8 @@ load_dotenv()
 
 
 llm = LLM(
-    model="mistral/mistral-small-latest",
-    api_key=os.getenv("MISTRAL_API_KEY")
+    model="gemini-2.5-flash",
+    api_key=os.getenv("GOOGLE_API_KEY")
 )
 
 

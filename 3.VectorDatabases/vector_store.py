@@ -19,10 +19,10 @@ tool = TXTSearchTool(
     txt='3.VectorDatabases/knowledge.txt',
     config={
         "embedder": {
-            "provider": "mistral",
+            "provider": "google",
             "config": {
-                "model": "mistral-embed",
-                "api_key": os.getenv("MISTRAL_API_KEY")
+                "model": "models/text-embedding-004",
+                "api_key": os.getenv("GOOGLE_API_KEY")
             }
         }
     }

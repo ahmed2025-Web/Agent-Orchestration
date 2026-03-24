@@ -1,5 +1,6 @@
 crewai
 crewai-tools
 langchain
-langchain-mistralai
+langchain-google-genai
+litellm
 python-dotenv
