@@ -1,45 +1,46 @@
 """
-Phase 3: Retrieval avec CrewAI Tools
-Goal: Utiliser un outil de recherche de manière isolée pour récupérer du contexte.
+Phase 3: Retrieval (Recherche sémantique)
+Objectif: Interroger la base de données vectorielle (précédemment créée) 
+pour récupérer les passages du document PDF les plus pertinents par rapport à une question.
 """
 
-from crewai_tools import TXTSearchTool
+from crewai_tools import PDFSearchTool
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 
-# Bypass validation OpenAI
 os.environ["OPENAI_API_KEY"] = "sk-placeholder"
 
-# 1. Initialiser l'outil (même configuration que vector_store.py)
-tool = TXTSearchTool(
-    txt='3.VectorDatabases/knowledge.txt',
+# 1. Connexion à notre base vectorielle existante
+tool = PDFSearchTool(
+    pdf='3.VectorDatabases/metaciv.pdf',
+    collection_name='metaciv_rag',
     config={
-        "embedder": {
-            "provider": "mistral",
+        "embedding_model": {
+            "provider": "sentence-transformer",
             "config": {
-                "model": "mistral-embed",
-                "api_key": os.getenv("MISTRAL_API_KEY")
+                "model": "sentence-transformers/all-MiniLM-L6-v2"
             }
         }
     }
 )
 
-# 2. Simuler une recherche (retrieval)
-query = "C'est quoi le Model Context Protocol ?"
+# 2. La question de l'utilisateur
+query = "Qu'est-ce qu'un cogniton dans le document ?"
 
 print("=" * 60)
-print("🔍 RETRIEVAL VIA CREWAI TOOL")
+print("🔍 SIMULATION DU RETRIEVAL (RECHERCHE)")
 print("=" * 60)
-print(f"Question: {query}\n")
+print(f"Question posée : '{query}'\n")
 
-# L'outil cherche dans le fichier texte et renvoie les passages pertinents
-result = tool.run(search_query=query)
+# 3. L'outil compare le vecteur de la question avec les vecteurs du PDF
+# et nous retourne le texte d'origine.
+result = tool.run(query=query)
 
-print(f"📄 Résultats trouvés par l'outil :\n")
+print("📄 Contexte récupéré depuis la base vectorielle :")
+print("-" * 60)
 print(result)
 print("-" * 60)
-print("\nNote: L'outil a converti la question en vecteur, cherché dans")
-print("l'index local, et extrait les morceaux de texte correspondants.")
+print("\nCe texte brut sera utilisé dans la prochaine étape comme contexte pour le LLM.")
 print("=" * 60)

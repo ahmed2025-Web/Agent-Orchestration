@@ -1,68 +1,68 @@
 """
-Phase 3: RAG Pipeline avec CrewAI
-Goal: Un Agent qui utilise un outil de recherche pour répondre à une question.
-C'est la forme la plus courante de RAG dans CrewAI.
+Phase 3: RAG Pipeline complet avec CrewAI
+Objectif: Combiner le "Retrieval" (recherche) et la "Generation" (synthèse par LLM) 
+au sein d'un Agent autonome CrewAI.
 """
 
 from crewai import Agent, Task, Crew
 from crewai.llm import LLM
-from crewai_tools import TXTSearchTool
+from crewai_tools import PDFSearchTool
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 
-# Bypass validation OpenAI
-os.environ["OPENAI_API_KEY"] = "sk-placeholder"
+# CrewAI tools require a dummy OPENAI_API_KEY to be set, even when not using OpenAI.
+os.environ["OPENAI_API_KEY"] = "not_used"
 
-# 1. Configurer le LLM Mistral
+# 1. Configuration du modèle de langage pour la Génération (Mistral)
 llm = LLM(
     model="mistral/mistral-small-latest",
     api_key=os.getenv("MISTRAL_API_KEY")
 )
 
-# 2. Définir l'outil RAG
-rag_tool = TXTSearchTool(
-    txt='3.VectorDatabases/knowledge.txt',
+# 2. Configuration de l'accès à la base vectorielle (Retrieval via Mistral Embeddings)
+rag_tool = PDFSearchTool(
+    pdf='3.VectorDatabases/metaciv.pdf',
+    collection_name='metaciv_rag',
     config={
-        "embedder": {
-            "provider": "mistral",
+        "embedding_model": {
+            "provider": "sentence-transformer",
             "config": {
-                "model": "mistral-embed",
-                "api_key": os.getenv("MISTRAL_API_KEY")
+                "model": "sentence-transformers/all-MiniLM-L6-v2",
             }
         }
     }
 )
 
-# 3. Créer l'Agent Expert avec l'outil
+# 3. Création de l'Agent CrewAI (Il fera le lien entre LLM et l'Outil)
 expert = Agent(
-    role="Expert en Architecture IA",
-    goal="Répondre aux questions techniques en utilisant EXCLUSIVEMENT les documents fournis",
-    backstory="Tu es un expert qui base toutes ses réponses sur des sources documentaires précises.",
+    role="Expert en Simulation Multi-Agents",
+    goal="Fournir des explications précises de concepts en s'appuyant uniquement sur les documents fournis.",
+    backstory="Tu es un chercheur méticuleux. Tu refuses d'inventer des informations et tu utilises toujours tes outils de recherche documentaires pour trouver tes réponses.",
     tools=[rag_tool],
     llm=llm,
-    verbose=True # Pour voir l'agent réfléchir et utiliser l'outil
+    verbose=False # Affiche les coulisses ("pensées" de l'agent)
 )
 
-# 4. Définir la tâche
+# 4. Création de la tâche qui va déclencher le pipeling RAG
 task = Task(
-    description="Explique ce qu'est le MCP (Model Context Protocol) et donne son analogie.",
+    description="Explique en français la notion de 'cogniton' d'après le PDF fourni.",
     agent=expert,
-    expected_output="Une explication précise basée sur le document fourni."
+    expected_output="Une réponse claire, résumée et en français, issue exclusivement du document PDF."
 )
 
-# 5. Exécuter le Crew
-crew = Crew(agents=[expert], tasks=[task])
+# 5. Lancement de l'orchestration
+crew = Crew(agents=[expert], tasks=[task], verbose=False)
 
 print("=" * 60)
-print("🚀 RAG PIPELINE VIA CREWAI AGENT")
+print("🚀 DÉMARRAGE DU PIPELINE RAG (AGENT + VECTOR STORE)")
 print("=" * 60)
 
 result = crew.kickoff()
 
 print("\n" + "=" * 60)
-print("🤖 RÉPONSE FINALE DE L'AGENT :")
+print("🤖 RÉPONSE FINALE GÉNÉRÉE :")
 print("-" * 60)
 print(result)
 print("=" * 60)
