@@ -1,8 +1,0 @@
-L'orchestration d'agents IA est le processus qui consiste à coordonner plusieurs agents spécialisés pour accomplir une tâche complexe.
-Plutôt que d'avoir un seul agent qui fait tout, on sépare les responsabilités (ex: un chercheur, un rédacteur, un correcteur).
-
-Le pattern ReAct (Reasoning and Acting) permet aux agents de réfléchir étape par étape et d'appeler des outils externes comme des APIs ou des bases de données.
-
-RAG (Retrieval-Augmented Generation) est une technique qui permet à l'agent de chercher des informations dans des documents locaux avant de formuler une réponse. Cela évite les hallucinations et permet d'utiliser des données privées.
-
-Le Model Context Protocol (MCP) est un standard ouvert qui permet d'exposer des outils et des données aux LLMs de manière sécurisée et interoperable, comme un port USB-C pour les outils d'IA.
