@@ -1,12 +1,5 @@
 """
-🚀 PROJET FINAL : AI STUDY PARTNER (L'Assistant d'Étude Intelligent)
-Objectif : Transformer un document complexe (PDF) en un guide d'étude 
-interactif avec résumé et quiz automatique.
-
-Ce script démontre :
-1. Recherche documentaire (RAG)
-2. Coopération entre 3 agents (Multi-agents)
-3. Transformation de savoir complexe en contenu pédagogique
+AI STUDY PARTNER (L'Assistant d'Étude Intelligent)
 """
 
 from crewai import Agent, Task, Crew, Process
@@ -24,10 +17,10 @@ llm = LLM(
     api_key=os.getenv("MISTRAL_API_KEY")
 )
 
-# 2. Outil de recherche dans le PDF (Base de connaissance MetaCiv)
+# 2. Outil de recherche dans le PDF 
 pdf_tool = PDFSearchTool(
-    pdf='3.VectorDatabases/metaciv.pdf',
-    collection_name='metaciv_rag',
+    pdf='3.VectorDatabases/diapo.pdf',
+    collection_name='diapo_rag',
     config={
         "embedding_model": {
             "provider": "sentence-transformer",
@@ -38,65 +31,64 @@ pdf_tool = PDFSearchTool(
     }
 )
 
-# 3. Définition des Agents (L'Équipe Pédagogique)
+# 3. Defining Agents (The Pedagogical Team)
 archivist = Agent(
-    role="Archiviste Scientifique",
-    goal="Extraire les informations précises et techniques du document PDF.",
-    backstory="""Tu es un expert en recherche documentaire. Ton rôle est de fouiller 
-    dans les archives MetaCiv pour trouver la 'vérité brute' sur un sujet donné. 
-    Tu ne simplifies rien, tu rapportes les faits tels qu'ils sont écrit.""",
+    role="Scientific Archivist",
+    goal="Extract precise and technical information from the PDF document.",
+    backstory="""You are an expert in documentary research. Your role is to search 
+    through the archives to find the 'raw truth' on a given subject. 
+    You do not simplify anything; you report the facts exactly as they are written.""",
     tools=[pdf_tool],
     llm=llm,
     verbose=True
 )
 
 pedagogue = Agent(
-    role="Professeur de Vulgarisation",
-    goal="Simplifier les concepts complexes pour les rendre accessibles à tous.",
-    backstory="""Tu es un enseignant exceptionnel. Tu prends les notes techniques 
-    de l'archiviste et tu les transformes en une explication claire, imagée 
-    et facile à retenir. Tu utilises des analogies si nécessaire.""",
+    role="Educational Simplifier",
+    goal="Simplify complex concepts to make them accessible to everyone.",
+    backstory="""You are an exceptional teacher. You take the technical notes 
+    from the archivist and transform them into a clear, illustrated 
+    explanation that is easy to remember. You use analogies if necessary.""",
     llm=llm,
     verbose=True
 )
 
 quiz_master = Agent(
-    role="Concepteur de Quiz",
-    goal="Créer un test d'évaluation pour vérifier la compréhension de l'élève.",
-    backstory="""Tu es expert en évaluation pédagogique. Tu crées des questions 
-    pertinentes qui ciblent les points essentiels du sujet pour s'assurer 
-    que l'étudiant a bien compris l'explication du professeur.""",
+    role="Quiz Designer",
+    goal="Create an assessment test to verify the student's understanding.",
+    backstory="""You are an expert in educational assessment. You create 
+    relevant questions that target the essential points of the subject to ensure 
+    that the student has correctly understood the teacher's explanation.""",
     llm=llm,
     verbose=True
 )
 
 def create_study_guide(topic):
-    # 4. Définition des Tâches (Le flux de travail)
     search_task = Task(
-        description=f"Cherche tout ce que le PDF dit sur le sujet suivant : {topic}",
+        description=f"Search for everything the PDF says about the following topic: {topic}",
         agent=archivist,
-        expected_output="Un rapport technique détaillé contenant les citations du PDF."
+        expected_output="A detailed technical report containing quotes from the PDF."
     )
 
     summary_task = Task(
-        description=f"Basé sur les recherches techniques, explique simplement le concept de {topic}.",
+        description=f"Based on the technical research, explain the concept of {topic} in simple terms.",
         agent=pedagogue,
         context=[search_task],
-        expected_output="Une explication pédagogique en français, structurée et claire."
+        expected_output="A clear, structured, and pedagogical explanation in English."
     )
 
-    output_filename = f"3.VectorDatabases/fiche_{topic.replace(' ', '_')}.md"
+    output_filename = f"3.VectorDatabases/study_guide_{topic.replace(' ', '_')}.md"
 
     quiz_task = Task(
-        description=f"""Crée le guide d'étude complet pour {topic}. 
-        Le document doit contenir :
-        1. L'explication pédagogique claire.
-        2. Un quiz de 3 questions (avec réponses à la fin).
+        description=f"""Create a complete study guide for {topic}. 
+        The document must contain:
+        1. A clear pedagogical explanation.
+        2. A quiz of 3 questions (with answers at the end).
         """,
         agent=quiz_master,
         context=[summary_task],
-        expected_output="Un document Markdown structuré avec titres et paragraphes.",
-        output_file=output_filename # C'est ici qu'on crée le fichier !
+        expected_output="A structured Markdown document with titles and paragraphs.",
+        output_file=output_filename 
     )
 
     # 5. Création et lancement du Crew
@@ -106,23 +98,23 @@ def create_study_guide(topic):
         process=Process.sequential
     )
 
-    print(f"\n🎓 Génération du guide d'étude pour : {topic}...")
+    print(f"\n🎓 Generating study guide for: {topic}...")
     result = study_crew.kickoff()
-    print(f"\n✅ Votre fiche de révision a été sauvegardée dans : {output_filename}")
+    print(f"\n✅ Your study guide has been saved to: {output_filename}")
     return result
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("🌟 BIENVENUE DANS VOTRE AI STUDY PARTNER")
+    print("🌟 WELCOME TO YOUR AI STUDY PARTNER")
     print("=" * 60)
     
-    sujet = input("👉 Quel concept du PDF voulez-vous étudier aujourd'hui ? ")
+    sujet = input("👉 Which concept from the PDF would you like to study today? ")
     
     if sujet.strip():
         resultat = create_study_guide(sujet)
         
         print("\n" + "📚" * 20)
-        print("VOTRE GUIDE D'ÉTUDE PERSONNALISÉ")
+        print("YOUR PERSONALIZED STUDY GUIDE")
         print("📚" * 20)
         print(resultat)
         print("=" * 60)

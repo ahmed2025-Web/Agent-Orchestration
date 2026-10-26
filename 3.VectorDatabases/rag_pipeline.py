@@ -13,7 +13,7 @@ import os
 load_dotenv()
 
 # CrewAI tools require a dummy OPENAI_API_KEY to be set, even when not using OpenAI.
-os.environ["OPENAI_API_KEY"] = "not_used"
+os.environ["OPENAI_API_KEY"] = "fake"
 
 # 1. Configuration du modèle de langage pour la Génération (Mistral)
 llm = LLM(
@@ -35,17 +35,17 @@ rag_tool = PDFSearchTool(
     }
 )
 
-# 3. Création de l'Agent CrewAI (Il fera le lien entre LLM et l'Outil)
+# 3. Création de l'Agent CrewAI 
 expert = Agent(
     role="Expert en Simulation Multi-Agents",
     goal="Fournir des explications précises de concepts en s'appuyant uniquement sur les documents fournis.",
     backstory="Tu es un chercheur méticuleux. Tu refuses d'inventer des informations et tu utilises toujours tes outils de recherche documentaires pour trouver tes réponses.",
     tools=[rag_tool],
     llm=llm,
-    verbose=False # Affiche les coulisses ("pensées" de l'agent)
+    verbose=False 
 )
 
-# 4. Création de la tâche qui va déclencher le pipeling RAG
+
 task = Task(
     description="Explique en français la notion de 'cogniton' d'après le PDF fourni.",
     agent=expert,

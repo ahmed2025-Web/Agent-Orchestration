@@ -1,5 +1,4 @@
 """
-Goal: Mini-projet combinant tous les concepts de Messages.
 Scénario : Un Interviewer pose 3 questions à un Expert, puis un Résumeur
 synthétise l'échange complet.
 """
@@ -20,98 +19,98 @@ llm = LLM(
 # ── Agents ──────────────────────────────────────────────────
 
 interviewer = Agent(
-    role="Journaliste Tech",
-    goal="Poser des questions pertinentes et progressives sur l'orchestration d'agents IA",
-    backstory="""Tu es un journaliste technologique pour un magazine spécialisé.
-    Tu poses des questions claires qui vont du simple au complexe.
-    Tu t'adresses à un public technique mais pas forcément expert.""",
+    role="Tech Journalist",
+    goal="Ask relevant and progressive questions about AI agent orchestration.",
+    backstory="""You are a technology journalist for a specialized magazine.
+    You ask clear questions that range from simple to complex.
+    You address a technical audience, but not necessarily experts.""",
     llm=llm
 )
 
 expert = Agent(
-    role="Architecte IA",
-    goal="Expliquer l'orchestration d'agents de manière technique mais accessible",
-    backstory="""Tu es un architecte IA senior qui conçoit des systèmes multi-agents.
-    Tu donnes des réponses structurées avec des exemples concrets.
-    Tu utilises des analogies quand c'est utile.""",
+    role="AI Architect",
+    goal="Explain agent orchestration in a technical but accessible way.",
+    backstory="""You are a senior AI architect who designs multi-agent systems.
+    You provide structured answers with concrete examples.
+    You use analogies where helpful.""",
     llm=llm
 )
 
-resumeur = Agent(
-    role="Rédacteur en Chef",
-    goal="Synthétiser une interview en un résumé structuré et engageant",
-    backstory="""Tu es rédacteur en chef d'un magazine tech.
-    Tu sais extraire les points clés d'une conversation.
-    Tu produis des résumés clairs avec les points essentiels.""",
+summarizer = Agent(
+    role="Editor-in-Chief",
+    goal="Synthesize an interview into a structured and engaging summary.",
+    backstory="""You are the editor-in-chief of a tech magazine.
+    You know how to extract the key points of a conversation.
+    You produce clear summaries with essential takeaways.""",
     llm=llm
 )
 
-# ── Tâches (Interview en 3 tours + résumé) ─────────────────
+# ── Tasks (Interview in 3 rounds + summary) ─────────────────
 
-# Q1 : Question d'introduction
+# Q1: Introduction question
 q1 = Task(
-    description="Pose une question d'introduction sur ce qu'est l'orchestration d'agents IA et pourquoi c'est important aujourd'hui",
+    description="Ask an introductory question about what AI agent orchestration is and why it's important today.",
     agent=interviewer,
-    expected_output="Une question d'introduction claire et engageante"
+    expected_output="A clear and engaging introductory question."
 )
 
-# R1 : Réponse à la question d'introduction
+# R1: Answer to the introductory question
 r1 = Task(
-    description="Réponds à la question du journaliste sur l'orchestration d'agents IA",
+    description="Answer the journalist's question about AI agent orchestration.",
     agent=expert,
-    expected_output="Une réponse structurée avec définition et importance",
+    expected_output="A structured answer with a definition and its importance.",
     context=[q1]
 )
 
-# Q2 : Question sur les patterns
+# Q2: Question on patterns
 q2 = Task(
-    description="Basé sur la réponse, pose une question sur les différents patterns d'orchestration (séquentiel, parallèle, conditionnel)",
+    description="Based on the response, ask a question about different orchestration patterns (sequential, parallel, conditional).",
     agent=interviewer,
-    expected_output="Une question technique sur les patterns",
+    expected_output="A technical question about orchestration patterns.",
     context=[r1]
 )
 
-# R2 : Réponse sur les patterns
+# R2: Answer on patterns
 r2 = Task(
-    description="Explique les patterns d'orchestration avec des exemples concrets pour chacun",
+    description="Explain orchestration patterns with concrete examples for each.",
     agent=expert,
-    expected_output="Explication des patterns avec exemples",
+    expected_output="An explanation of patterns with examples.",
     context=[q2]
 )
 
-# Q3 : Question sur le futur
+# Q3: Question on the future
 q3 = Task(
-    description="Pose une question finale sur les défis et le futur de l'orchestration d'agents",
+    description="Ask a final question about the challenges and the future of agent orchestration.",
     agent=interviewer,
-    expected_output="Une question prospective",
+    expected_output="A forward-looking question.",
     context=[r2]
 )
 
-# R3 : Réponse sur le futur
+# R3: Answer on the future
 r3 = Task(
-    description="Donne ta vision sur les défis actuels et l'avenir de l'orchestration d'agents",
+    description="Share your vision regarding the current challenges and the future of agent orchestration.",
     agent=expert,
-    expected_output="Vision prospective avec défis et opportunités",
+    expected_output="A forward-looking vision covering challenges and opportunities.",
     context=[q3]
 )
 
-# Résumé final
-resume = Task(
-    description="""Synthétise l'interview complète en un résumé structuré avec :
-    - Titre accrocheur
-    - 3 points clés de l'interview
-    - Citation marquante de l'expert
-    - Conclusion en une phrase""",
-    agent=resumeur,
-    expected_output="Un résumé structuré de l'interview",
+# Final summary
+summary = Task(
+    description="""Synthesize the entire interview into a structured summary that includes:
+    - A catchy title
+    - 3 key points from the interview
+    - A striking quote from the expert
+    - A concluding sentence""",
+    agent=summarizer,
+    expected_output="A structured summary of the interview.",
     context=[q1, r1, q2, r2, q3, r3]
 )
 
-# ── Exécution ───────────────────────────────────────────────
+# ── Execution ───────────────────────────────────────────────
 
 crew = Crew(
-    agents=[interviewer, expert, resumeur],
-    tasks=[q1, r1, q2, r2, q3, r3, resume],
+    agents=[interviewer, expert, summarizer],
+    tasks=[q1, r1, q2, r2, q3, r3, summary],
     process=Process.sequential,
     verbose=False
 )
@@ -119,16 +118,16 @@ crew = Crew(
 result = crew.kickoff()
 
 print("=" * 60)
-print("🎙️  PROJET: INTERVIEW IA - Orchestration d'Agents")
+print("🎙️  PROJECT: AI INTERVIEW - Agent Orchestration")
 print("=" * 60)
 
-# Afficher chaque tour
+# Display each round
 turns = [
     ("❓ Q1 - Introduction", q1),
-    ("💡 R1 - Définition", r1),
+    ("💡 R1 - Definition", r1),
     ("❓ Q2 - Patterns", q2),
-    ("💡 R2 - Exemples", r2),
-    ("❓ Q3 - Futur", q3),
+    ("💡 R2 - Examples", r2),
+    ("❓ Q3 - Future", q3),
     ("💡 R3 - Vision", r3),
 ]
 
@@ -138,9 +137,9 @@ for label, task in turns:
     print("-" * 40)
 
 print("\n" + "=" * 60)
-print("📋 RÉSUMÉ DE L'INTERVIEW")
+print("📋 INTERVIEW SUMMARY")
 print("=" * 60)
-print(f"\n{resume.output.raw if resume.output else result}")
+print(f"\n{summary.output.raw if summary.output else result}")
 print("\n" + "=" * 60)
-print("✅ Concepts démontrés: Single-turn, Rôles, Multi-turn, Résumé")
+print("✅ Concepts demonstrated: Single-turn, Roles, Multi-turn, Summary")
 print("=" * 60)

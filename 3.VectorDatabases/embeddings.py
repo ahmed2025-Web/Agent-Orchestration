@@ -1,11 +1,8 @@
 """
 Phase 3: Embeddings (Génération de vecteurs)
-Objectif: Montrer comment un morceau de texte se transforme en une liste de nombres (vecteur).
-Ceci est la base des bases de données vectorielles.
+
 """
 
-# Utilisation de HuggingFace pour l'exemple (gratuit et local)
-# Si langchain_huggingface n'est pas installé, vous pouvez faire : pip install langchain-huggingface
 try:
     from langchain_huggingface import HuggingFaceEmbeddings
     
@@ -29,5 +26,4 @@ try:
     print("=" * 60)
 
 except ImportError:
-    print("Note: Pour tester ce script pur, installez : pip install langchain-huggingface")
-    print("Dans le reste du projet, CrewAI gérera les embeddings automatiquement avec Mistral !")
+    print("Error")
